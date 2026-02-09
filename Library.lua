@@ -1897,19 +1897,21 @@ do
         end
 
         function Toggle:Display()
-            -- Determine what the colors should be
+            -- 0.6 is the speed (Slower). Increase to 1.0 for very slow.
+            local Speed = 0.4
+            local T_Info = TweenInfo.new(Speed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            
+            -- Colors based on toggle state
             local TargetMain = Toggle.Value and Library.AccentColor or Library.MainColor
             local TargetBorder = Toggle.Value and Library.AccentColorDark or Library.OutlineColor
 
-            -- Smoothly slide the colors (0.2 seconds)
-            local TweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            
-            TweenService:Create(ToggleInner, TweenInfo, {
+            -- Start the slow animation
+            TweenService:Create(ToggleInner, T_Info, {
                 BackgroundColor3 = TargetMain,
                 BorderColor3 = TargetBorder
             }):Play()
 
-            -- Keep the registry updated so it doesn't break when you change menu themes
+            -- Keep the theme registry updated
             Library.RegistryMap[ToggleInner].Properties.BackgroundColor3 = Toggle.Value and 'AccentColor' or 'MainColor';
             Library.RegistryMap[ToggleInner].Properties.BorderColor3 = Toggle.Value and 'AccentColorDark' or 'OutlineColor';
         end;
