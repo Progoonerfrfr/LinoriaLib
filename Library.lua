@@ -9,6 +9,9 @@ local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 
+local TweenService = game:GetService('TweenService');
+local ToggleTweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out);
+
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
 local ScreenGui = Instance.new('ScreenGui');
@@ -1894,9 +1897,19 @@ do
         end
 
         function Toggle:Display()
-            ToggleInner.BackgroundColor3 = Toggle.Value and Library.AccentColor or Library.MainColor;
-            ToggleInner.BorderColor3 = Toggle.Value and Library.AccentColorDark or Library.OutlineColor;
+            -- Determine what the colors should be
+            local TargetMain = Toggle.Value and Library.AccentColor or Library.MainColor
+            local TargetBorder = Toggle.Value and Library.AccentColorDark or Library.OutlineColor
 
+            -- Smoothly slide the colors (0.2 seconds)
+            local TweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            
+            TweenService:Create(ToggleInner, TweenInfo, {
+                BackgroundColor3 = TargetMain,
+                BorderColor3 = TargetBorder
+            }):Play()
+
+            -- Keep the registry updated so it doesn't break when you change menu themes
             Library.RegistryMap[ToggleInner].Properties.BackgroundColor3 = Toggle.Value and 'AccentColor' or 'MainColor';
             Library.RegistryMap[ToggleInner].Properties.BorderColor3 = Toggle.Value and 'AccentColorDark' or 'OutlineColor';
         end;
